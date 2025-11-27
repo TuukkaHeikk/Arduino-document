@@ -1,5 +1,5 @@
 # Arduino 
-
+Laite lukee lämpötilaa sekä ilmankosteutta DHT11 anturin avulla ja päivittää sen Arduino Cloudiin. Laite sisältää myös hienon LED valon, jota voi cloudin avulla ohjata.
 
 # Liitäntä
 DHT 11 anturin liitäntä: Vasen pinni > Digital pin, keskimmäinen pinni > +5V, Oikea pinni > Ground. Anturi sisältää vastuksen.

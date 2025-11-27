@@ -14,5 +14,7 @@ LED liitäntä: +5V > 220Ω > pidempi jalka > LED > Digital pin, ja LED > Ground
 
 # Laitteen tiedot
 Nimi ja malli: Arduino MKR1000 WiFi
+
 Min / Max lämpötila: 0°C - 50°C
+
 Lämpötila-anturi: 3-pin DHT11

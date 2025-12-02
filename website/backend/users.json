@@ -1,0 +1,18 @@
+{
+    "user1": {
+        "name": "Pasi",
+        "settings": {
+            "showTemp": true,
+            "showHumidity": false,
+            "showChart": true
+        }
+    },
+    "user2": {
+        "name": "Matti",
+        "settings": {
+            "showTemp": false,
+            "showHumidity": true,
+            "showChart": false
+        }
+    }
+}

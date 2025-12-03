@@ -1,0 +1,40 @@
+#user-list {
+    list-style: none;
+    /* remove default bullets */
+    padding: 0;
+    margin: 0;
+    width: 250px;
+    /* fixed width for consistency */
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+#user-list li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    /* indicates clickable */
+    transition: background-color 0.2s;
+}
+
+.selected {
+    background-color: #9c9c9c;
+}
+
+/* Last item has no border */
+#user-list li:last-child {
+    border-bottom: none;
+}
+
+/* Hover effect */
+#user-list li:hover {
+    background-color: #e0e0e0;
+}
+
+.menu {}
+
+.menu button {
+}

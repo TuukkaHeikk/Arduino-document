@@ -3,16 +3,14 @@
         "name": "Pasi",
         "settings": {
             "showTemp": true,
-            "showHumidity": false,
-            "showChart": true
+            "showHumidity": false
         }
     },
     "user2": {
         "name": "Matti",
         "settings": {
             "showTemp": false,
-            "showHumidity": true,
-            "showChart": false
+            "showHumidity": true
         }
     }
 }

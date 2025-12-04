@@ -1,3 +1,6 @@
+// Sivujen testaaminen toimii kun ajaa node.js script.js ja selaimeen kirjoittaa:
+// http://localhost:3000/admin tai http://localhost:3000/user
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -5,7 +8,8 @@ const cors = require('cors');
 const { getArduinoData } = require('./arduino');
 const Database = require('better-sqlite3');
 
-// Database
+// Database:
+
 const db = new Database('database.db');
 
 db.exec(`
@@ -16,6 +20,7 @@ db.exec(`
     )
 `)
 
+// Miltä käyttäjät näyttävät:
 const user = {
     name: "Pasi",
     settings: {
@@ -42,30 +47,32 @@ const user = {
 
 const app = express();
 app.use(cors());    // ilman tätä CORS ei anna minkään toimia
-const port = 5500;
+const port = 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend'))) // ?
 
+// Näiden avulla ei tarvitse erikseen kirjoittaa index.html URL'n loppuun
+app.use('/admin', express.static(path.join(__dirname, "../frontend/admin")));
+app.use('/user', express.static(path.join(__dirname, "../frontend/user")));
+
+
 // Käyttäjä:
 
-// Hae asiat (lämpötila, ilmankosteus) mitä tietty käyttäjä voi nähdä
-app.get('/users/:uid', async (req, res) => {
-    const uid = req.params.uid;
-    const users = JSON.parse(fs.readFileSync('users.json'));
+// Lähetä tietylle käyttäjälle tämän asetukset
+app.get('/users/:id', async (req, res) => {
+    const id = req.params.id;
 
-    if (!users[uid]) {
-        return res.status(404).json({ error: "User not found" });
+    // Etsitään käyttäjä IDn avulla
+    const stmt = db.prepare(`SELECT * FROM users WHERE id = ?`);
+    const row = stmt.get(id);
+
+    if (!row) {
+        return res.status(500).json({ error: 'User could not be found.' });
     }
+    // TODO: Tarkista settingsit (temperature / humidity true tai false) databasesta,
+    // jonka jälkeen arduino cloudista tarvittavat arvot
 
-    const userSettings = users[uid].settings;
-    const arduinoData = await getArduinoData();
-
-    const filteredData = {};
-    if (userSettings.showTemp) filteredData.temperature = arduinoData.temperature;
-    if (userSettings.showHumidity) filteredData.humidity = arduinoData.humidity;
-
-    return res.json(filteredData);
 });
 
 // Admin: 
@@ -85,7 +92,7 @@ app.get('/api/admin', (req, res) => {
 });
 
 // Muuta käyttäjien asetuksia
-app.post('/api/admin/:uid', (req, res) => {
+app.post('/api/admin/setting', (req, res) => {
     const { userId } = req.body;  // Kenen käyttäjän asetuksia muutetaan
     const { settingId } = req.body;   // asetus jota vaihdetaan
     const { value } = req.body; // true tai false
@@ -110,12 +117,12 @@ app.post('/api/admin/:uid', (req, res) => {
                 console.log('key avain', key);
                 if (user.settings[key].id === settingId) {
                     try {
-                    user.settings[key].value = value;
+                        user.settings[key].value = value;
 
-                    db.prepare(`UPDATE users SET settings = ? WHERE id = ?`)
-                        .run(JSON.stringify(user.settings), user.id);
+                        db.prepare(`UPDATE users SET settings = ? WHERE id = ?`)
+                            .run(JSON.stringify(user.settings), user.id);
 
-                    return res.status(200).json({ message: 'Value changed' });
+                        return res.status(200).json({ message: 'Value changed' });
                     } catch (error) {
                         console.log('error: ', error);
                         return res.status(500).json({ error: "Something went wrong" });
@@ -129,4 +136,4 @@ app.post('/api/admin/:uid', (req, res) => {
     }
 });
 
-app.listen(port, () => console.log('serveri pyörii portilla: ', port));
+app.listen(port, () => console.log('serveri pyörii portilla:', port));

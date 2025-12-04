@@ -7,7 +7,7 @@ function changeSetting(event, user, button) {
 
         console.log('user:', user);
         console.log('button:', button);
-        fetch(`http://localhost:5500/api/admin/${user.id}`, {
+        fetch(`/api/admin/setting`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
@@ -42,7 +42,7 @@ function handleClick(event, user) {
     menu.style.position = "fixed";
     menu.style.bottom = "20px";
     menu.style.left = "20px";
-    menu.style.background = "#5f5555ff";
+    menu.style.background = "#6b6b6bff";
     menu.style.border = "1px solid #ccc";
     menu.style.padding = "8px";
     menu.style.borderRadius = "5px";
@@ -74,7 +74,9 @@ function handleClick(event, user) {
 
 }
 
-fetch('http://localhost:5500/api/admin')
+// TODO: Nyt kuka vain voi hakea http://localhost:3000/api/admin ja nähdä kaikki käyttäjät ja asetukset.
+//       Tämä täytyy välttää.
+fetch('/api/admin')
     .then(res => res.json())
     .then(users => {
         const ul = document.getElementById('user-list');

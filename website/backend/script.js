@@ -26,23 +26,22 @@ const user = {
     settings: {
         showTemp: {
             id: 0,
-            value: true
+            value: true,
+            displayName: "Temperature"
         },
         showHumidity: {
             id: 1,
-            value: false
+            value: false,
+            displayName: "Humidity"
         }
     }
 };
 
 
-//const settingsStr = JSON.stringify(user.settings);
-
-
-//const stmt = db.prepare(`INSERT INTO users (name, settings) VALUES (?, ?)`);
-
-// Run the statement
-//const info = stmt.run(user.name, JSON.stringify(user.settings));
+// Lisää Pasi databaseen:
+// const settingsStr = JSON.stringify(user.settings);
+// const stmt = db.prepare(`INSERT INTO users (name, settings) VALUES (?, ?)`);
+// const info = stmt.run(user.name, JSON.stringify(user.settings));
 
 
 const app = express();

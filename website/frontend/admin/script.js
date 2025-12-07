@@ -56,7 +56,7 @@ function handleClick(event, user) {
 
     options.forEach(setting => {
         const item = document.createElement("h2");
-        item.textContent = setting[0];
+        item.textContent = setting[1].displayName;
         //console.log('item.textcontent', key);
 
         const val = document.createElement("button");

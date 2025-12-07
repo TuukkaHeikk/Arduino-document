@@ -1,9 +1,8 @@
 function changeSetting(event, user, button) {
     try {
         const settingId = parseInt(button.dataset.id);
-        const valueWrong = JSON.parse(button.textContent);
-        const value = !valueWrong;
-
+        const current = button.textContent === "true";  // muuta buttonin value booleaniksi, ei tule toimimaan jos buttonin teksti ei ole true / false
+        const value = !current;
 
         console.log('user:', user);
         console.log('button:', button);
@@ -20,7 +19,10 @@ function changeSetting(event, user, button) {
         })
             .then(res => {
                 if (res.status === 200) {
-                    button.value = !value
+                    console.log('VALUEN VALUE: ', value);
+                    const newValue = String(value);
+                    console.log('newValue: ', newValue);
+                    button.textContent = newValue;
                 }
             })
             .catch(error => console.error(error))

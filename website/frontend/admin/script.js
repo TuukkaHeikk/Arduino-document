@@ -29,7 +29,6 @@ function changeSetting(event, user, button) {
     } catch (error) {
         console.error(error);
     }
-
 }
 
 function handleClick(event, user) {
@@ -41,17 +40,6 @@ function handleClick(event, user) {
     const menu = document.createElement("div");
     menu.className = 'menu'
     menu.id = "dynamic-menu";
-    menu.style.position = "fixed";
-    menu.style.bottom = "20px";
-    menu.style.left = "20px";
-    menu.style.background = "#6b6b6bff";
-    menu.style.border = "1px solid #ccc";
-    menu.style.padding = "8px";
-    menu.style.borderRadius = "5px";
-    menu.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
-    menu.style.zIndex = 9999;
-    menu.style.minWidth = "200px";
-    menu.style.maxWidth = "300px";
 
     options = Object.entries(user.settings);
     console.log('options!', options);

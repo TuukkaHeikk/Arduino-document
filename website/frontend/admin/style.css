@@ -34,7 +34,18 @@
     background-color: #e0e0e0;
 }
 
-.menu {}
-
-.menu button {
+.menu {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #6b6b6bff;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 9999;
+    min-width: 200px;
+    max-width: 300px;
 }
+
+.menu button {}

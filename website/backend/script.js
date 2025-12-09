@@ -5,7 +5,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
-const { getArduinoData } = require('./arduino');
+// const { getArduinoToken } = require('./arduino.js');
+const { fetchData } = require('./arduino.js');
 const Database = require('better-sqlite3');
 
 // Database:
@@ -27,12 +28,14 @@ const user = {
         showTemp: {
             id: 0,
             value: true,
-            displayName: "Temperature"
+            displayName: "Temperature",
+            symbol: "℃"
         },
         showHumidity: {
             id: 1,
             value: false,
-            displayName: "Humidity"
+            displayName: "Humidity",
+            symbol: "%"
         }
     }
 };
@@ -53,7 +56,7 @@ app.use(express.static(path.join(__dirname, '../frontend'))) // ?
 
 // Näiden avulla ei tarvitse erikseen kirjoittaa index.html URL'n loppuun
 app.use('/admin', express.static(path.join(__dirname, "../frontend/admin")));
-app.use('/user', express.static(path.join(__dirname, "../frontend/user")));
+app.use('/users', express.static(path.join(__dirname, "../frontend/user")));
 
 
 // Käyttäjä:
@@ -69,12 +72,26 @@ app.get('/users/:id', async (req, res) => {
     if (!row) {
         return res.status(500).json({ error: 'User could not be found.' });
     }
-    // TODO: Tarkista settingsit (temperature / humidity true tai false) databasesta,
-    // jonka jälkeen arduino cloudista tarvittavat arvot
 
+    const settings = JSON.parse(row.settings);
+    console.log('settings: ', settings);
+
+    const keysArray = Object.entries(settings)
+        .filter(([key, item]) => item.value) // keep only true values
+        .map(([key, item]) => ({
+            key,
+            displayName: item.displayName,
+            symbol: item.symbol
+        }));          // extract the key
+
+    console.log('KEYSARRAY:::: ', keysArray);
+    const results = await fetchData(keysArray);
+
+    return res.status(200).json(results);
+    //console.log('keysArray:', keysArray);
 });
 
-// Admin: 
+// Admin:
 
 // Lähetä kaikki käyttäjät
 app.get('/api/admin', (req, res) => {

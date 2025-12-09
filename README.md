@@ -18,3 +18,11 @@ Nimi ja malli: Arduino MKR1000 WiFi
 Min / Max lämpötila: 0°C - 50°C
 
 Lämpötila-anturi: 3-pin DHT11
+
+# Nettisivu
+
+## Admin
+Admin sivulla ylläpitäjä voi määrittää mitä antureitten mittaamia tuloksia kukin käyttäjä näkee.
+
+## User
+User sivulla / sivuilla käyttäjät näkevät Arduino Cloudista lähettämän antureiden mittaamat tulokset, jotka ylläpitäjä päättää.

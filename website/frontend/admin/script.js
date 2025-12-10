@@ -64,6 +64,10 @@ function handleClick(event, user) {
 
 }
 
+fetch('/admin')
+    .then(response => console.log(response))
+    .catch(error => console.error(error))
+
 // TODO: Nyt kuka vain voi hakea http://localhost:3000/api/admin ja nähdä kaikki käyttäjät ja asetukset.
 //       Tämä täytyy välttää.
 fetch('/api/admin')

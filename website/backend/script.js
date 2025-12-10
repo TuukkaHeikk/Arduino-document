@@ -2,10 +2,9 @@
 // http://localhost:3000/admin tai http://localhost:3000/user
 
 const express = require('express');
-const fs = require('fs');
+const session = require('express-session');
 const path = require('path');
 const cors = require('cors');
-// const { getArduinoToken } = require('./arduino.js');
 const { fetchData } = require('./arduino.js');
 const Database = require('better-sqlite3');
 
@@ -51,6 +50,13 @@ const app = express();
 app.use(cors());    // ilman tätä CORS ei anna minkään toimia
 const port = 3000;
 
+app.use(session({
+    secret: "tosi_salainen_avain_jota_kukaan_ei_voi_tietaa7049823832",   // change this to something else
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1000 * 60 * 60 }
+}));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend'))) // ?
 
@@ -93,8 +99,18 @@ app.get('/users/:id', async (req, res) => {
 
 // Admin:
 
+app.get('/admin-login', async (req, res) => {
+    req.session.isAdmin = true;
+    res.redirect('/admin');
+})
+
 // Lähetä kaikki käyttäjät
 app.get('/api/admin', (req, res) => {
+    // Estä fetchaamista URL'n kautta ellei ole käyttäjä
+    if (!req.session.isAdmin) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
     const rows = db.prepare(`SELECT * FROM users`).all();
 
     const users = rows.map(row => ({
@@ -129,7 +145,6 @@ app.post('/api/admin/setting', (req, res) => {
 
         try {
             for (const key in user.settings) {
-                console.log('key avain', key);
                 if (user.settings[key].id === settingId) {
                     try {
                         user.settings[key].value = value;

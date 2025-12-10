@@ -115,7 +115,7 @@ app.post('/api/admin/setting', (req, res) => {
 
     console.log('VALUE: ', value);
     const stmt = db.prepare(`SELECT * FROM users WHERE id = ?`);
-    const row = stmt.get(userId);   // find user with id = 1
+    const row = stmt.get(userId);
 
     if (row) {
         const user = {
@@ -124,9 +124,8 @@ app.post('/api/admin/setting', (req, res) => {
             settings: JSON.parse(row.settings) // parse the nested settings
         };
 
-        console.log(user.name);                   // "Pasi"
+        console.log(user.name);
         console.log(user.settings);
-        //user.settings.
 
         try {
             for (const key in user.settings) {
@@ -135,8 +134,12 @@ app.post('/api/admin/setting', (req, res) => {
                     try {
                         user.settings[key].value = value;
 
-                        db.prepare(`UPDATE users SET settings = ? WHERE id = ?`)
-                            .run(JSON.stringify(user.settings), user.id);
+                        const stmt = db.prepare(`UPDATE users SET settings = ? WHERE id = ?`)
+                        const result = stmt.run(JSON.stringify(user.settings), user.id);
+
+                        if (result.changes === 0) {
+                            return res.status(400).json({ error: 'No rows updated' });
+                        }
 
                         return res.status(200).json({ message: 'Value changed' });
                     } catch (error) {

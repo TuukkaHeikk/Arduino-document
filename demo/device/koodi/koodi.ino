@@ -26,11 +26,16 @@ const int LED_PIN = 7;
 
 DHT dht(DHTPIN, DHTTYPE);
 
+unsigned long lastUpdate = 0;
+const unsigned long updateInterval = 30UL * 60UL * 1000UL;  // 30 minutes
+
 void setup() {
   // Initialize serial and wait for port to open:
   Serial.begin(9600);
   // This delay gives the chance to wait for a Serial Monitor without blocking if none is found
   delay(1500); 
+
+  unsigned long lastUpdate = millis() - updateInterval;
 
   // Defined in thingProperties.h
   dht.begin();
@@ -55,15 +60,18 @@ void setup() {
 void loop() {
   ArduinoCloud.update();
   // Your code here 
-  float t = dht.readTemperature();
-  float h = dht.readHumidity();
+  if (millis() - lastUpdate >= updateInterval) {
+    float t = dht.readTemperature();
+    float h = dht.readHumidity();
 
-  Serial.print("Temp: ");
-  Serial.println(t);
+    Serial.print("Temp: ");
+    Serial.println(t);
 
-  humidity = h;
-  temperature = t;
-  delay(2000);
+    humidity = h;
+    temperature = t;
+
+    lastUpdate = millis();
+  }
 }
 
 
@@ -81,17 +89,12 @@ void onLedStateChange()  {
 }
 
 void onTemperatureChange() {
-  // Whatever you want to happen when the Temperature property changes
-  Serial.println("Temperature changed!");
 }
 
-
-
-
-/*
-  Since Humidity is READ_WRITE variable, onHumidityChange() is
-  executed every time a new value is received from IoT Cloud.
-*/
 void onHumidityChange()  {
-  // Add your code here to act upon Humidity change
 }
+
+
+
+
+

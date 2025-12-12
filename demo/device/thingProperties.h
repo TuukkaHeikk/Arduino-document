@@ -16,8 +16,8 @@ bool ledState;
 
 void initProperties(){
 
-  ArduinoCloud.addProperty(humidity, READWRITE, 1 * SECONDS, onHumidityChange);
-  ArduinoCloud.addProperty(temperature, READWRITE, 1 * SECONDS, onTemperatureChange);
+  ArduinoCloud.addProperty(humidity, READWRITE, ON_CHANGE, onHumidityChange);
+  ArduinoCloud.addProperty(temperature, READWRITE, ON_CHANGE, onTemperatureChange);
   ArduinoCloud.addProperty(ledState, READWRITE, ON_CHANGE, onLedStateChange);
 
 }
